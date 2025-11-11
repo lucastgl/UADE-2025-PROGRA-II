@@ -160,11 +160,65 @@ Regla: VIP (prioridad 1) > NORMAL (prioridad 2)
 
 ---
 
-### 🔲 Fase 3: Gestión de Cocina y Reparto (PENDIENTE)
+### ✅ Fase 3: Módulo de Gestión de Cocina (COMPLETADO)
 
-- `GestorCocina` → Administración de preparación
-- `GestorReparto` → Asignación y seguimiento de entregas
-- Integración completa del flujo de pedidos
+| Aspecto | Estado |
+|---------|--------|
+| **GestorCocina** | ✅ Implementado (~320 líneas) |
+| **Cola FIFO** | ✅ Preparación secuencial |
+| **Simulación** | ✅ Preparación de platos |
+| **Integración** | ✅ Menú interactivo |
+
+#### Servicio Implementado
+
+**`GestorCocina`** - Gestión de preparación de pedidos
+- ✅ Cola de preparación (QueueADT - FIFO)
+- ✅ Extracción de pedidos según orden de llegada
+- ✅ Simulación de preparación plato por plato
+- ✅ Cambio de estado a "LISTO"
+- ✅ Determinación de destino (REPARTO/RETIRO)
+- ✅ Estadísticas de cocina
+
+#### Funcionalidades del Sistema
+
+**🍳 Gestión de Cocina**
+```
+✅ Enviar Pedido a Cocina
+   → Extrae pedido de cola de prioridad
+   → Lo agrega a cola FIFO de preparación
+
+✅ Procesar Siguiente Pedido
+   → Simula preparación de cada plato
+   → Calcula tiempo total
+   → Marca como LISTO
+   → Determina si va a REPARTO o RETIRO
+
+✅ Ver Cola de Preparación
+✅ Ver Estado de la Cocina
+```
+
+#### Flujo de Procesamiento
+
+```
+1. Pedido en cola de prioridad (GestorPedidos)
+   ↓
+2. Enviar a cocina → Cola FIFO (GestorCocina)
+   ↓
+3. Procesar pedido:
+   → Inicio de preparación (EN_PREPARACION)
+   → Preparar cada plato (simulación)
+   → Finalizar preparación (LISTO)
+   ↓
+4. Determinar destino:
+   → DOMICILIO → Enviar a reparto
+   → RETIRO → Listo para cliente
+```
+
+---
+
+### 🔲 Fase 4: Gestión de Reparto (PENDIENTE)
+
+- `GestorReparto` → Asignación de repartidores y seguimiento de entregas
 
 ---
 
@@ -204,15 +258,16 @@ Una vez ejecutado, verás el menú principal:
 ║                    MENÚ PRINCIPAL                          ║
 ╠════════════════════════════════════════════════════════════╣
 ║  1. 📋 Gestión de Pedidos                                  ║
-║  2. 🔍 Consultas                                           ║
-║  3. 📊 Estadísticas                                        ║
-║  4. ⚙️  Configuración                                      ║
+║  2. 🍳 Gestión de Cocina                                   ║
+║  3. 🔍 Consultas                                           ║
+║  4. 📊 Estadísticas                                        ║
+║  5. ⚙️  Configuración                                      ║
 ║  0. 🚪 Salir                                               ║
 ╚════════════════════════════════════════════════════════════╝
 ```
 
 **Controles:**
-- Números (1-4): Seleccionar opción
+- Números (1-5): Seleccionar opción
 - 0: Volver/Salir
 - Enter: Continuar
 
@@ -342,23 +397,24 @@ git push origin master
 El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativas de Java.
 
 ### Interfaces (tda/)
-- `QueueADT` - Cola FIFO
+- `QueueADT` - Cola FIFO ✅ *Usado en cocina*
 - `StackADT` - Pila LIFO
 - `SetADT` - Conjunto sin repetidos
-- `LinkedListADT` - Lista enlazada
+- `LinkedListADT` - Lista enlazada ✅ *Usado en modelo*
 - `SimpleDictionaryADT` - Diccionario clave-valor
 - `MultipleDictionaryADT` - Diccionario con múltiples valores
-- `PriorityQueueADT` - Cola con prioridad
+- `PriorityQueueADT` - Cola con prioridad ✅ *Usado en pedidos*
 - `BinaryTreeADT` - Árbol binario de búsqueda
 - `GraphADT` - Grafo
 
 ### Implementaciones (implementations/)
 
 **Dinámicas (basadas en nodos):**
-- DynamicQueueADT, DynamicStackADT, DynamicSetADT
-- DynamicLinkedListADT ✅ *Usado en el modelo*
+- DynamicQueueADT ✅ *Usado en GestorCocina*
+- DynamicLinkedListADT ✅ *Usado en Cliente, Pedido, Repartidor*
+- DynamicPriorityQueueADT ✅ *Usado en GestorPedidos*
+- DynamicStackADT, DynamicSetADT
 - DynamicSimpleDictionaryADT
-- DynamicPriorityQueueADT ✅ *Usado en el modelo*
 - DynamicBinaryTreeADT, DynamicGraphADT
 
 **Estáticas (basadas en arrays):**
@@ -376,18 +432,15 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 ┌─────────────────────────────────┬──────────┐
 │ Métrica                         │ Valor    │
 ├─────────────────────────────────┼──────────┤
-│ Archivos Java                   │ 54       │
+│ Archivos Java                   │ 55       │
 │ Interfaces TDA                  │ 9        │
 │ Implementaciones TDA            │ 17       │
 │ Clases del Modelo               │ 6        │
-│ Clases de Servicio              │ 2        │
+│ Clases de Servicio              │ 3        │
 │ Enumeraciones                   │ 3        │
 │ Clases de Nodos                 │ 5        │
 │ Excepciones Personalizadas      │ 5        │
-│ Líneas de Código (Total)        │ 4,600+   │
-│ Líneas de Código (Fase 2)       │ ~1,165   │
-│ Métodos Implementados (Fase 2)  │ 53       │
-│ Validaciones (Fase 2)           │ 10+      │
+│ Líneas de Código (Total)        │ 5,100+   │
 │ Build Status                    │ SUCCESS  │
 └─────────────────────────────────┴──────────┘
 ```
@@ -397,12 +450,17 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 **Fase 1 - Modelado de Entidades:**
 - Líneas de código: ~1,100
 - Clases: 6 + 3 enums
-- TDAs utilizados: LinkedListADT, PriorityQueueADT
+- TDAs: LinkedListADT, PriorityQueueADT
 
 **Fase 2 - Gestión de Pedidos:**
 - Líneas de código: ~1,165
-- Clases: 2 servicios + 1 app rediseñada
-- Funcionalidades: Registro, validación, cola de prioridad, menú interactivo, estadísticas
+- Clases: GestorPedidos, DatosIniciales, Main
+- TDAs: PriorityQueueADT, LinkedListADT
+
+**Fase 3 - Gestión de Cocina:**
+- Líneas de código: ~500 (320 GestorCocina + 180 Main)
+- Clases: GestorCocina
+- TDAs: QueueADT (FIFO)
 
 ---
 
@@ -491,9 +549,8 @@ mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 ## 🚀 Próximos Pasos
 
 ### En Desarrollo
-- 🔲 GestorCocina - Gestión de preparación de pedidos
-- 🔲 GestorReparto - Asignación de repartidores
-- 🔲 Integración completa del flujo de pedidos
+- 🔲 GestorReparto - Asignación de repartidores y seguimiento de entregas
+- 🔲 Integración completa del flujo (Pedido → Cocina → Reparto → Entrega)
 
 ### Futuras Mejoras
 - Persistencia de datos
@@ -501,6 +558,7 @@ mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 - Sistema de reportes avanzados
 - Optimización de rutas de entrega
 - Módulo de inventario
+- Notificaciones en tiempo real
 
 ---
 

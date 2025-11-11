@@ -3,6 +3,7 @@ package org.example.app;
 import org.example.model.*;
 import org.example.model.Enums.*;
 import org.example.service.GestorPedidos;
+import org.example.service.GestorCocina;
 import org.example.service.DatosIniciales;
 
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class Main {
     
     private static Scanner scanner = new Scanner(System.in);
     private static GestorPedidos gestorPedidos;
+    private static GestorCocina gestorCocina;
     private static DatosIniciales datosIniciales;
     
     public static void main(String[] args) {
@@ -42,6 +44,7 @@ public class Main {
      */
     private static void inicializarSistema() {
         gestorPedidos = new GestorPedidos();
+        gestorCocina = new GestorCocina("Cocina Principal UADE");
         datosIniciales = new DatosIniciales();
         
         // Cargar datos iniciales
@@ -65,12 +68,15 @@ public class Main {
                     menuGestionPedidos();
                     break;
                 case 2:
-                    menuConsultas();
+                    menuGestionCocina();
                     break;
                 case 3:
-                    menuEstadisticas();
+                    menuConsultas();
                     break;
                 case 4:
+                    menuEstadisticas();
+                    break;
+                case 5:
                     menuConfiguracion();
                     break;
                 case 0:
@@ -92,9 +98,10 @@ public class Main {
         System.out.println("║                    MENÚ PRINCIPAL                          ║");
         System.out.println("╠════════════════════════════════════════════════════════════╣");
         System.out.println("║  1. 📋 Gestión de Pedidos                                  ║");
-        System.out.println("║  2. 🔍 Consultas                                           ║");
-        System.out.println("║  3. 📊 Estadísticas                                        ║");
-        System.out.println("║  4. ⚙️  Configuración                                      ║");
+        System.out.println("║  2. 🍳 Gestión de Cocina                                   ║");
+        System.out.println("║  3. 🔍 Consultas                                           ║");
+        System.out.println("║  4. 📊 Estadísticas                                        ║");
+        System.out.println("║  5. ⚙️  Configuración                                      ║");
         System.out.println("║  0. 🚪 Salir                                               ║");
         System.out.println("╚════════════════════════════════════════════════════════════╝");
         System.out.print("  Seleccione una opción: ");
@@ -309,6 +316,171 @@ public class Main {
             System.out.println("\n  ✗ Pedido no encontrado\n");
         }
         
+        presionarEnter();
+    }
+    
+    /**
+     * Menú de gestión de cocina
+     */
+    private static void menuGestionCocina() {
+        boolean volver = false;
+        
+        while (!volver) {
+            System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+            System.out.println("║              GESTIÓN DE COCINA                             ║");
+            System.out.println("╠════════════════════════════════════════════════════════════╣");
+            System.out.println("║  1. 🍳 Enviar Pedido a Cocina                              ║");
+            System.out.println("║  2. ⏭️  Procesar Siguiente Pedido                          ║");
+            System.out.println("║  3. 📋 Ver Cola de Preparación                             ║");
+            System.out.println("║  4. 📊 Ver Estado de la Cocina                             ║");
+            System.out.println("║  0. ⬅️  Volver al Menú Principal                           ║");
+            System.out.println("╚════════════════════════════════════════════════════════════╝");
+            System.out.print("  Seleccione una opción: ");
+            
+            int opcion = leerOpcion();
+            
+            switch (opcion) {
+                case 1:
+                    enviarPedidoACocina();
+                    break;
+                case 2:
+                    procesarSiguientePedidoCocina();
+                    break;
+                case 3:
+                    verColaPreparacion();
+                    break;
+                case 4:
+                    verEstadoCocina();
+                    break;
+                case 0:
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("\n✗ Opción inválida.\n");
+            }
+        }
+    }
+    
+    /**
+     * Envía un pedido pendiente a la cocina
+     */
+    private static void enviarPedidoACocina() {
+        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║           ENVIAR PEDIDO A COCINA                           ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        
+        // Extraer el siguiente pedido del gestor de pedidos (cola de prioridad)
+        int idPedido = gestorPedidos.obtenerSiguientePedido();
+        
+        if (idPedido == -1) {
+            System.out.println();
+            presionarEnter();
+            return;
+        }
+        
+        // Buscar el pedido
+        Pedido pedido = gestorPedidos.buscarPedidoPorId(idPedido, datosIniciales.getPedidos());
+        
+        if (pedido != null) {
+            // Agregar a la cola de preparación de la cocina
+            if (gestorCocina.agregarPedidoAPreparacion(idPedido, pedido)) {
+                System.out.println("  Cliente: " + pedido.getCliente().getNombre());
+                System.out.println("  Prioridad: " + pedido.getPrioridad());
+                System.out.println("  Platos: " + pedido.getCantidadPlatos());
+            }
+        } else {
+            System.out.println("✗ Error: No se pudo encontrar el pedido");
+        }
+        
+        System.out.println();
+        presionarEnter();
+    }
+    
+    /**
+     * Procesa el siguiente pedido de la cola de cocina
+     */
+    private static void procesarSiguientePedidoCocina() {
+        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║        PROCESAR PEDIDO EN COCINA                           ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        
+        // Verificar si hay pedidos en cola
+        if (gestorCocina.colaVacia()) {
+            System.out.println("  ✗ No hay pedidos en cola de preparación");
+            System.out.println("  → Primero envíe pedidos a la cocina\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Verificar si ya hay un pedido en preparación
+        if (gestorCocina.hayPedidoEnPreparacion()) {
+            System.out.println("  ✗ Ya hay un pedido en preparación");
+            System.out.println("  → Finalice el pedido actual primero\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Extraer siguiente pedido
+        int idPedido = gestorCocina.extraerSiguientePedido();
+        
+        if (idPedido == -1) {
+            System.out.println();
+            presionarEnter();
+            return;
+        }
+        
+        // Buscar el pedido
+        Pedido pedido = gestorPedidos.buscarPedidoPorId(idPedido, datosIniciales.getPedidos());
+        
+        if (pedido != null) {
+            // Procesar el pedido completo
+            if (gestorCocina.procesarPedidoCompleto(idPedido, pedido, gestorPedidos)) {
+                // Determinar destino
+                String destino = gestorCocina.determinarDestino(pedido);
+                
+                if (destino.equals("REPARTO")) {
+                    System.out.println("  ℹ️  El pedido está listo para asignar a reparto");
+                } else {
+                    System.out.println("  ℹ️  El pedido está listo para retiro por el cliente");
+                }
+            }
+        } else {
+            System.out.println("✗ Error: No se pudo encontrar el pedido\n");
+        }
+        
+        presionarEnter();
+    }
+    
+    /**
+     * Muestra la cola de preparación de la cocina
+     */
+    private static void verColaPreparacion() {
+        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║           COLA DE PREPARACIÓN                              ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        
+        int enCola = gestorCocina.getCantidadEnCola();
+        
+        if (enCola == 0) {
+            System.out.println("  No hay pedidos en cola de preparación\n");
+        } else {
+            System.out.println("  Pedidos en cola: " + enCola);
+            System.out.println("  (Se procesan en orden FIFO)\n");
+            
+            if (gestorCocina.hayPedidoEnPreparacion()) {
+                System.out.println("  🍳 Pedido actual en preparación: #" + gestorCocina.getPedidoEnPreparacionId());
+                System.out.println();
+            }
+        }
+        
+        presionarEnter();
+    }
+    
+    /**
+     * Muestra el estado actual de la cocina
+     */
+    private static void verEstadoCocina() {
+        gestorCocina.mostrarEstado();
         presionarEnter();
     }
     
