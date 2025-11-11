@@ -1,28 +1,31 @@
-# Estructura del Proyecto - Sistema de Gestión de Pedidos y Entregas
+# 📁 Estructura del Proyecto
 
-## 📁 Organización de Paquetes
+## Organización de Paquetes
 
 ```
 org.example/
 ├── app/                    # Clase principal con menú interactivo
-│   └── Main.java
+│   ├── Main.java          # Punto de entrada del sistema
+│   └── TestModelo.java    # Pruebas del modelo de dominio
 │
 ├── model/                  # Clases del dominio del negocio
-│   ├── Cliente.java        # Información de clientes
-│   ├── Pedido.java         # Gestión de pedidos
-│   ├── Repartidor.java     # Información de repartidores
-│   └── Enums.java          # Enumeraciones del sistema
+│   ├── Enums.java         # Enumeraciones (TipoPedido, Prioridad, EstadoPedido)
+│   ├── Cliente.java       # Gestión de clientes
+│   ├── Plato.java         # Platos del menú
+│   ├── Pedido.java        # Pedidos del restaurante
+│   ├── Repartidor.java    # Repartidores
+│   └── Cocina.java        # Cola de preparación
 │
 ├── tda/                    # Interfaces de Tipos de Datos Abstractos propios
-│   ├── QueueADT.java       # Interfaz Cola
-│   ├── StackADT.java       # Interfaz Pila
-│   ├── SetADT.java         # Interfaz Conjunto
-│   ├── LinkedListADT.java  # Interfaz Lista Enlazada
-│   ├── SimpleDictionaryADT.java      # Interfaz Diccionario Simple
-│   ├── MultipleDictionaryADT.java    # Interfaz Diccionario Múltiple
-│   ├── PriorityQueueADT.java         # Interfaz Cola con Prioridad
-│   ├── BinaryTreeADT.java            # Interfaz Árbol Binario
-│   └── GraphADT.java                 # Interfaz Grafo
+│   ├── QueueADT.java      # Interfaz Cola
+│   ├── StackADT.java      # Interfaz Pila
+│   ├── SetADT.java        # Interfaz Conjunto
+│   ├── LinkedListADT.java # Interfaz Lista Enlazada
+│   ├── SimpleDictionaryADT.java       # Interfaz Diccionario Simple
+│   ├── MultipleDictionaryADT.java     # Interfaz Diccionario Múltiple
+│   ├── PriorityQueueADT.java          # Interfaz Cola con Prioridad
+│   ├── BinaryTreeADT.java             # Interfaz Árbol Binario
+│   └── GraphADT.java                  # Interfaz Grafo
 │
 ├── implementations/        # Implementaciones concretas de los TDAs
 │   ├── nodes/             # Nodos para estructuras dinámicas
@@ -36,9 +39,9 @@ org.example/
 │   │   ├── DynamicQueueADT.java
 │   │   ├── DynamicStackADT.java
 │   │   ├── DynamicSetADT.java
-│   │   ├── DynamicLinkedListADT.java
+│   │   ├── DynamicLinkedListADT.java      ✅ Usado en el modelo
 │   │   ├── DynamicSimpleDictionaryADT.java
-│   │   ├── DynamicPriorityQueueADT.java
+│   │   ├── DynamicPriorityQueueADT.java   ✅ Usado en el modelo
 │   │   ├── DynamicBinaryTreeADT.java
 │   │   └── DynamicGraphADT.java
 │   │
@@ -54,9 +57,9 @@ org.example/
 │       └── StaticGraphADT.java
 │
 ├── service/               # Lógica de negocio (a implementar)
-│   ├── GestorPedidos      # Gestión de pedidos del restaurante
-│   ├── GestorCocina       # Gestión de la cocina
-│   └── GestorReparto      # Gestión de entregas
+│   ├── GestorPedidos     # Gestión de pedidos del restaurante
+│   ├── GestorCocina      # Gestión de la cocina
+│   └── GestorReparto     # Gestión de entregas
 │
 └── utils/                 # Clases auxiliares y utilidades
     ├── exceptions/        # Excepciones personalizadas
@@ -77,68 +80,144 @@ org.example/
         └── MultipleDictionaryADTutil.java
 ```
 
-## 🔧 Configuración del Proyecto
+---
+
+## Árbol de Directorios Completo
+
+```
+TrabajoPractico-Algoritmos2-GarciaL-Barzaghi/
+│
+├── src/
+│   └── main/
+│       ├── java/org/example/
+│       │   ├── app/
+│       │   │   ├── Main.java
+│       │   │   └── TestModelo.java
+│       │   ├── model/
+│       │   │   ├── Enums.java
+│       │   │   ├── Cliente.java
+│       │   │   ├── Plato.java
+│       │   │   ├── Pedido.java
+│       │   │   ├── Repartidor.java
+│       │   │   └── Cocina.java
+│       │   ├── tda/
+│       │   │   └── [9 interfaces]
+│       │   ├── implementations/
+│       │   │   ├── nodes/
+│       │   │   │   └── [5 nodos]
+│       │   │   └── [17 implementaciones]
+│       │   ├── service/
+│       │   │   └── [pendiente]
+│       │   └── utils/
+│       │       ├── exceptions/
+│       │       │   └── [5 excepciones]
+│       │       └── [8 utilidades]
+│       └── resources/
+│
+├── target/                    # Archivos compilados (generado por Maven)
+│   └── classes/
+│
+├── pom.xml                    # Configuración de Maven
+├── README.md                  # Documentación principal
+├── ESTRUCTURA.md              # Este archivo
+└── MODELO.md                  # Documentación del modelo de dominio
+```
+
+---
+
+## Archivos por Tipo
+
+### Clases de Aplicación (2)
+- `Main.java` - Punto de entrada del sistema
+- `TestModelo.java` - Pruebas del modelo
+
+### Modelo de Dominio (6 + 3 enums)
+- `Enums.java` - 3 enumeraciones
+- `Cliente.java` - 201 líneas
+- `Plato.java` - 144 líneas
+- `Pedido.java` - 184 líneas
+- `Repartidor.java` - 233 líneas
+- `Cocina.java` - 341 líneas
+
+### Interfaces TDA (9)
+- Estructuras básicas: Queue, Stack, Set, LinkedList
+- Diccionarios: Simple, Multiple
+- Avanzadas: PriorityQueue, BinaryTree, Graph
+
+### Implementaciones TDA (17 + 5 nodos)
+- 8 implementaciones dinámicas
+- 9 implementaciones estáticas
+- 5 clases de nodos
+
+### Utilidades (8 + 5 excepciones)
+- 8 clases de utilidades para TDAs
+- 5 excepciones personalizadas
+
+---
+
+## Uso de TDAs en el Modelo
+
+| Clase | TDA Utilizado | Propósito |
+|-------|---------------|-----------|
+| **Cliente** | `LinkedListADT` | Almacenar historial de pedidos |
+| **Pedido** | `LinkedListADT` | Almacenar lista de platos |
+| **Repartidor** | `LinkedListADT` | Almacenar pedidos entregados |
+| **Cocina** | `PriorityQueueADT` | Cola de pedidos con prioridad VIP |
+
+---
+
+## Configuración del Proyecto
 
 - **Build Tool:** Maven
 - **Java Version:** 24
 - **Encoding:** UTF-8
+- **Archivos Compilados:** 52
+- **Total de Líneas:** ~3,500+
 
-## ✅ Estado Actual
+---
 
-### Completado:
-- ✅ Reorganización completa de la estructura de paquetes
-- ✅ 9 interfaces TDA definidas
-- ✅ 17 implementaciones de TDAs (dinámicas y estáticas)
-- ✅ 5 nodos para estructuras dinámicas
-- ✅ 8 utilidades para manejo de TDAs
-- ✅ 5 excepciones personalizadas
-- ✅ Compilación exitosa del proyecto
-- ✅ Clase Main actualizada con información del proyecto
+## Convenciones de Nomenclatura
 
-### Por Implementar:
-- 🔲 Definir completamente las clases del modelo (Cliente, Pedido, Repartidor, Plato)
-- 🔲 Implementar servicios de gestión (GestorPedidos, GestorCocina, GestorReparto)
-- 🔲 Crear menú interactivo por consola en Main
+### Paquetes
+- `app` - Minúscula, aplicación
+- `model` - Minúscula, modelo de dominio
+- `tda` - Minúscula, interfaces TDA
+- `implementations` - Minúscula, implementaciones
+- `service` - Minúscula, servicios
+- `utils` - Minúscula, utilidades
 
-## 🚀 Cómo Ejecutar
+### Clases
+- `NombreClase` - PascalCase
+- Interfaces TDA terminan en `ADT`
+- Implementaciones dinámicas prefijo `Dynamic`
+- Implementaciones estáticas prefijo `Static`
+- Nodos terminan en `Node`
+- Excepciones terminan en `Exception`
+- Utilidades terminan en `util` o `Util`
 
-### Compilar el proyecto:
-```bash
-mvn clean compile
+### Métodos
+- `getNombre()` - camelCase para getters
+- `setNombre()` - camelCase para setters
+- `calcularTotal()` - camelCase para métodos
+- `isEmpty()` - camelCase con prefijo `is` para boolean
+
+### Variables
+- `nombreVariable` - camelCase
+- `MAX_SIZE` - UPPER_SNAKE_CASE para constantes
+- `this.variable` - uso explícito de this
+
+---
+
+## Dependencias entre Paquetes
+
+```
+app → model, service
+model → tda, implementations
+implementations → tda, implementations.nodes
+service → model, tda, implementations
+utils → tda, implementations
 ```
 
-### Ejecutar la aplicación:
-```bash
-mvn exec:java -Dexec.mainClass="org.example.app.Main"
-```
+---
 
-## 📝 Notas Importantes
-
-1. **TDAs Propios:** El proyecto utiliza estructuras de datos propias, NO las nativas de Java (no se usa ArrayList, HashMap, etc.)
-
-2. **Implementaciones Duales:** Cada TDA tiene dos implementaciones:
-   - **Dinámica:** Usa nodos enlazados (memoria dinámica)
-   - **Estática:** Usa arrays (memoria estática con límite MAX)
-
-3. **Excepciones:** Se han creado excepciones personalizadas para manejo de errores específicos de las estructuras de datos
-
-4. **Utilidades:** Cada TDA tiene una clase de utilidad con métodos helper como `copy()` y `print()`
-
-## 🎯 Próximos Pasos
-
-1. **Modelar el Dominio:**
-   - Completar la clase `Plato` con atributos (nombre, precio, tiempo de preparación)
-   - Completar la clase `Pedido` con relación a Cliente y Platos
-   - Completar la clase `Cliente` con datos de contacto
-   - Completar la clase `Repartidor` con estado y pedidos asignados
-
-2. **Implementar Servicios:**
-   - `GestorPedidos`: Cola de pedidos, asignación a cocina
-   - `GestorCocina`: Preparación de pedidos, prioridades
-   - `GestorReparto`: Asignación de repartidores, rutas
-
-3. **Crear Interfaz:**
-   - Menú interactivo por consola
-   - Opciones para gestionar pedidos, cocina y reparto
-   - Visualización de estados y reportes
-
+*Ver documentación completa en [README.md](README.md)*
