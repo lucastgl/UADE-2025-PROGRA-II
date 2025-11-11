@@ -251,13 +251,21 @@ utils → tda, implementations
 - ✅ Simulación de recorrido con cálculo de tiempos
 - ✅ Estadísticas y ranking de repartidores
 
+### ✅ FASE 5: MÓDULO DE REPORTES Y TESTS
+**Estado:** ✅ COMPLETADO
+- ✅ GestorReportes con 6 tipos de reportes
+- ✅ Tests unitarios (27 tests con JUnit 5)
+- ✅ Interfaz mejorada con menú de reportes
+- ✅ Cobertura completa de módulos
+
 ---
 
 ## 🎉 PROYECTO COMPLETO
 
 **Flujo End-to-End:** Pedido → Cocina → Reparto → Entrega ✅  
-**TDAs Utilizados:** QueueADT, PriorityQueueADT, LinkedListADT ✅  
-**Sistema Interactivo:** 4 módulos funcionales ✅
+**TDAs Utilizados:** QueueADT, PriorityQueueADT, LinkedListADT, SimpleDictionaryADT ✅  
+**Sistema Interactivo:** 5 módulos funcionales ✅  
+**Tests Unitarios:** 27 tests, 0 fallos ✅
 
 ---
 

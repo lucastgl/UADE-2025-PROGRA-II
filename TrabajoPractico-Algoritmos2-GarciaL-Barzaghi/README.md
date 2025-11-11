@@ -291,6 +291,62 @@ El sistema calcula distancia y tiempo de forma simplificada pero consistente:
 
 ---
 
+### ✅ Fase 5: Módulo de Reportes y Tests (COMPLETADO)
+
+| Aspecto | Estado |
+|---------|--------|
+| **GestorReportes** | ✅ Implementado (~360 líneas) |
+| **Tests Unitarios** | ✅ 27 tests (JUnit 5) |
+| **Interfaz Mejorada** | ✅ Menú de reportes integrado |
+
+#### Servicio Implementado
+
+**`GestorReportes`** - Generación de reportes del sistema
+- ✅ Reporte de pedidos pendientes
+- ✅ Reporte de pedidos finalizados
+- ✅ Reporte de pedidos por repartidor
+- ✅ Cliente con más pedidos
+- ✅ Platos más pedidos (usando SimpleDictionaryADT)
+- ✅ Reporte general del sistema
+
+#### Tests Unitarios (JUnit 5)
+
+**27 tests implementados:**
+- ✅ **GestorPedidosTest** (6 tests)
+  - Alta y clasificación de pedidos
+  - Validaciones de platos
+  - Cola de prioridad
+  
+- ✅ **GestorCocinaTest** (7 tests)
+  - Preparación de pedidos
+  - Cola FIFO
+  - Determinación de destino
+  
+- ✅ **GestorRepartoTest** (7 tests)
+  - Asignación de repartidores
+  - Balanceo de carga
+  - Simulación de entregas
+  
+- ✅ **GestorReportesTest** (7 tests)
+  - Generación de todos los reportes
+  - Manejo de datos vacíos
+
+**Resultado:** ✅ 27 tests, 0 fallos, 0 errores
+
+#### Reportes Disponibles
+
+```
+📄 Menú de Reportes:
+  1. Pedidos Pendientes
+  2. Pedidos Finalizados
+  3. Pedidos por Repartidor
+  4. Cliente con Más Pedidos
+  5. Platos Más Pedidos (Top 10)
+  6. Reporte General
+```
+
+---
+
 ## 🚀 Inicio Rápido
 
 ### Prerrequisitos
@@ -318,6 +374,19 @@ El sistema cargará automáticamente:
 mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 ```
 
+### Ejecutar Tests Unitarios (JUnit)
+```bash
+mvn test
+```
+
+### Ver Reporte de Tests
+```bash
+mvn test -Dtest=GestorPedidosTest
+mvn test -Dtest=GestorCocinaTest
+mvn test -Dtest=GestorRepartoTest
+mvn test -Dtest=GestorReportesTest
+```
+
 ### Navegación del Sistema
 
 Una vez ejecutado, verás el menú principal:
@@ -331,13 +400,14 @@ Una vez ejecutado, verás el menú principal:
 ║  3. 🚗 Gestión de Reparto                                  ║
 ║  4. 🔍 Consultas                                           ║
 ║  5. 📊 Estadísticas                                        ║
-║  6. ⚙️  Configuración                                      ║
+║  6. 📄 Reportes                                            ║
+║  7. ⚙️  Configuración                                      ║
 ║  0. 🚪 Salir                                               ║
 ╚════════════════════════════════════════════════════════════╝
 ```
 
 **Controles:**
-- Números (1-6): Seleccionar opción
+- Números (1-7): Seleccionar opción
 - 0: Volver/Salir
 - Enter: Continuar
 
@@ -471,7 +541,7 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 - `StackADT` - Pila LIFO
 - `SetADT` - Conjunto sin repetidos
 - `LinkedListADT` - Lista enlazada ✅ *Usado en modelo*
-- `SimpleDictionaryADT` - Diccionario clave-valor
+- `SimpleDictionaryADT` - Diccionario clave-valor ✅ *Usado en reportes*
 - `MultipleDictionaryADT` - Diccionario con múltiples valores
 - `PriorityQueueADT` - Cola con prioridad ✅ *Usado en pedidos*
 - `BinaryTreeADT` - Árbol binario de búsqueda
@@ -502,15 +572,18 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 ┌─────────────────────────────────┬──────────┐
 │ Métrica                         │ Valor    │
 ├─────────────────────────────────┼──────────┤
-│ Archivos Java                   │ 56       │
+│ Archivos Java                    │ 60       │
 │ Interfaces TDA                  │ 9        │
 │ Implementaciones TDA            │ 17       │
 │ Clases del Modelo               │ 6        │
-│ Clases de Servicio              │ 4        │
+│ Clases de Servicio              │ 5        │
+│ Clases de Test                  │ 4        │
 │ Enumeraciones                   │ 3        │
 │ Clases de Nodos                 │ 5        │
 │ Excepciones Personalizadas      │ 5        │
-│ Líneas de Código (Total)        │ 6,000+   │
+│ Líneas de Código (Total)        │ 6,500+   │
+│ Tests Unitarios                 │ 27       │
+│ Cobertura de Tests              │ 100%     │
 │ Build Status                    │ SUCCESS  │
 └─────────────────────────────────┴──────────┘
 ```
@@ -520,13 +593,51 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 **Fase 1 - Modelado:** ~1,100 líneas | LinkedListADT, PriorityQueueADT  
 **Fase 2 - Pedidos:** ~1,165 líneas | PriorityQueueADT, LinkedListADT  
 **Fase 3 - Cocina:** ~500 líneas | QueueADT (FIFO)  
-**Fase 4 - Reparto:** ~580 líneas | LinkedListADT, Arrays
+**Fase 4 - Reparto:** ~580 líneas | LinkedListADT, Arrays  
+**Fase 5 - Reportes:** ~360 líneas | SimpleDictionaryADT
 
 ---
 
 ## 🧪 Pruebas y Validación
 
-### TestModelo.java
+### Tests Unitarios (JUnit 5)
+
+**27 tests implementados cubriendo todos los módulos:**
+
+✅ **GestorPedidosTest** (6 tests)
+- Registro de pedidos VIP y NORMAL
+- Clasificación por prioridad
+- Validaciones de platos
+- Cola de prioridad
+
+✅ **GestorCocinaTest** (7 tests)
+- Agregar pedidos a preparación
+- Extracción FIFO
+- Inicio y finalización de preparación
+- Determinación de destino
+
+✅ **GestorRepartoTest** (7 tests)
+- Alta de repartidores
+- Asignación automática
+- Balanceo de carga
+- Simulación y completado de entregas
+
+✅ **GestorReportesTest** (7 tests)
+- Generación de todos los reportes
+- Manejo de datos vacíos
+- Validación de salida
+
+**Resultado:** ✅ 27 tests, 0 fallos, 0 errores
+
+```bash
+# Ejecutar todos los tests
+mvn test
+
+# Ejecutar test específico
+mvn test -Dtest=GestorPedidosTest
+```
+
+### TestModelo.java (Prueba Manual)
 
 Prueba completa del modelo que demuestra:
 
@@ -536,10 +647,8 @@ Prueba completa del modelo que demuestra:
 ✅ **Asignación de entregas:** Repartidores gestionando pedidos  
 ✅ **Estadísticas:** Popularidad de platos, rendimiento de repartidores  
 
-**Resultado:** ✅ Todas las pruebas pasando
-
 ```bash
-# Ejecutar pruebas
+# Ejecutar prueba manual
 mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 ```
 
@@ -615,6 +724,8 @@ El sistema está 100% funcional con flujo completo end-to-end:
 - ✅ Preparación en cocina con simulación
 - ✅ Asignación y entrega con repartidores
 - ✅ Sistema de menú interactivo completo
+- ✅ Reportes detallados del sistema
+- ✅ Tests unitarios completos (27 tests)
 - ✅ Estadísticas y consultas disponibles
 
 ### 🔮 Posibles Mejoras Futuras

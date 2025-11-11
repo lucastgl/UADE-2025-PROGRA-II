@@ -5,6 +5,7 @@ import org.example.model.Enums.*;
 import org.example.service.GestorPedidos;
 import org.example.service.GestorCocina;
 import org.example.service.GestorReparto;
+import org.example.service.GestorReportes;
 import org.example.service.DatosIniciales;
 
 import java.util.Scanner;
@@ -19,6 +20,7 @@ public class Main {
     private static GestorPedidos gestorPedidos;
     private static GestorCocina gestorCocina;
     private static GestorReparto gestorReparto;
+    private static GestorReportes gestorReportes;
     private static DatosIniciales datosIniciales;
     
     public static void main(String[] args) {
@@ -59,6 +61,9 @@ public class Main {
             datosIniciales.getCantidadRepartidores()
         );
         
+        // Inicializar gestor de reportes
+        gestorReportes = new GestorReportes(gestorPedidos, gestorCocina, gestorReparto, datosIniciales);
+        
         presionarEnter();
     }
     
@@ -89,6 +94,9 @@ public class Main {
                     menuEstadisticas();
                     break;
                 case 6:
+                    menuReportes();
+                    break;
+                case 7:
                     menuConfiguracion();
                     break;
                 case 0:
@@ -114,7 +122,8 @@ public class Main {
         System.out.println("║  3. 🚗 Gestión de Reparto                                  ║");
         System.out.println("║  4. 🔍 Consultas                                           ║");
         System.out.println("║  5. 📊 Estadísticas                                        ║");
-        System.out.println("║  6. ⚙️  Configuración                                      ║");
+        System.out.println("║  6. 📄 Reportes                                            ║");
+        System.out.println("║  7. ⚙️  Configuración                                      ║");
         System.out.println("║  0. 🚪 Salir                                               ║");
         System.out.println("╚════════════════════════════════════════════════════════════╝");
         System.out.print("  Seleccione una opción: ");
@@ -776,6 +785,62 @@ public class Main {
                     break;
                 case 3:
                     mostrarClientesVIP();
+                    break;
+                case 0:
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("\n✗ Opción inválida.\n");
+            }
+        }
+    }
+    
+    /**
+     * Menú de reportes
+     */
+    private static void menuReportes() {
+        boolean volver = false;
+        
+        while (!volver) {
+            System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+            System.out.println("║                    REPORTES                                 ║");
+            System.out.println("╠════════════════════════════════════════════════════════════╣");
+            System.out.println("║  1. 📋 Pedidos Pendientes                                  ║");
+            System.out.println("║  2. ✅ Pedidos Finalizados                                 ║");
+            System.out.println("║  3. 🚗 Pedidos por Repartidor                              ║");
+            System.out.println("║  4. 👤 Cliente con Más Pedidos                             ║");
+            System.out.println("║  5. 🍕 Platos Más Pedidos                                  ║");
+            System.out.println("║  6. 📊 Reporte General                                     ║");
+            System.out.println("║  0. ⬅️  Volver                                             ║");
+            System.out.println("╚════════════════════════════════════════════════════════════╝");
+            System.out.print("  Seleccione una opción: ");
+            
+            int opcion = leerOpcion();
+            
+            switch (opcion) {
+                case 1:
+                    gestorReportes.reportePedidosPendientes();
+                    presionarEnter();
+                    break;
+                case 2:
+                    gestorReportes.reportePedidosFinalizados();
+                    presionarEnter();
+                    break;
+                case 3:
+                    gestorReportes.reportePedidosPorRepartidor();
+                    presionarEnter();
+                    break;
+                case 4:
+                    gestorReportes.reporteClienteConMasPedidos();
+                    presionarEnter();
+                    break;
+                case 5:
+                    gestorReportes.reportePlatosMasPedidos();
+                    presionarEnter();
+                    break;
+                case 6:
+                    gestorReportes.reporteGeneral();
+                    presionarEnter();
                     break;
                 case 0:
                     volver = true;
