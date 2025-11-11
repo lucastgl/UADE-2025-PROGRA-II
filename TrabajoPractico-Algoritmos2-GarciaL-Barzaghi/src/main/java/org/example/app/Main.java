@@ -4,6 +4,7 @@ import org.example.model.*;
 import org.example.model.Enums.*;
 import org.example.service.GestorPedidos;
 import org.example.service.GestorCocina;
+import org.example.service.GestorReparto;
 import org.example.service.DatosIniciales;
 
 import java.util.Scanner;
@@ -17,6 +18,7 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static GestorPedidos gestorPedidos;
     private static GestorCocina gestorCocina;
+    private static GestorReparto gestorReparto;
     private static DatosIniciales datosIniciales;
     
     public static void main(String[] args) {
@@ -45,10 +47,17 @@ public class Main {
     private static void inicializarSistema() {
         gestorPedidos = new GestorPedidos();
         gestorCocina = new GestorCocina("Cocina Principal UADE");
+        gestorReparto = new GestorReparto("Sistema de Reparto UADE");
         datosIniciales = new DatosIniciales();
         
         // Cargar datos iniciales
         datosIniciales.cargarTodo(gestorPedidos);
+        
+        // Cargar repartidores en el gestor de reparto
+        gestorReparto.cargarRepartidores(
+            datosIniciales.getRepartidores(),
+            datosIniciales.getCantidadRepartidores()
+        );
         
         presionarEnter();
     }
@@ -71,12 +80,15 @@ public class Main {
                     menuGestionCocina();
                     break;
                 case 3:
-                    menuConsultas();
+                    menuGestionReparto();
                     break;
                 case 4:
-                    menuEstadisticas();
+                    menuConsultas();
                     break;
                 case 5:
+                    menuEstadisticas();
+                    break;
+                case 6:
                     menuConfiguracion();
                     break;
                 case 0:
@@ -99,9 +111,10 @@ public class Main {
         System.out.println("╠════════════════════════════════════════════════════════════╣");
         System.out.println("║  1. 📋 Gestión de Pedidos                                  ║");
         System.out.println("║  2. 🍳 Gestión de Cocina                                   ║");
-        System.out.println("║  3. 🔍 Consultas                                           ║");
-        System.out.println("║  4. 📊 Estadísticas                                        ║");
-        System.out.println("║  5. ⚙️  Configuración                                      ║");
+        System.out.println("║  3. 🚗 Gestión de Reparto                                  ║");
+        System.out.println("║  4. 🔍 Consultas                                           ║");
+        System.out.println("║  5. 📊 Estadísticas                                        ║");
+        System.out.println("║  6. ⚙️  Configuración                                      ║");
         System.out.println("║  0. 🚪 Salir                                               ║");
         System.out.println("╚════════════════════════════════════════════════════════════╝");
         System.out.print("  Seleccione una opción: ");
@@ -481,6 +494,149 @@ public class Main {
      */
     private static void verEstadoCocina() {
         gestorCocina.mostrarEstado();
+        presionarEnter();
+    }
+    
+    /**
+     * Menú de gestión de reparto
+     */
+    private static void menuGestionReparto() {
+        boolean volver = false;
+        
+        while (!volver) {
+            System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+            System.out.println("║              GESTIÓN DE REPARTO                            ║");
+            System.out.println("╠════════════════════════════════════════════════════════════╣");
+            System.out.println("║  1. 🚗 Asignar Pedido a Repartidor                         ║");
+            System.out.println("║  2. 📦 Entregar Pedido Completo                            ║");
+            System.out.println("║  3. 📊 Ver Estado del Reparto                              ║");
+            System.out.println("║  4. 🏍️  Ver Estadísticas de Repartidores                   ║");
+            System.out.println("║  0. ⬅️  Volver al Menú Principal                           ║");
+            System.out.println("╚════════════════════════════════════════════════════════════╝");
+            System.out.print("  Seleccione una opción: ");
+            
+            int opcion = leerOpcion();
+            
+            switch (opcion) {
+                case 1:
+                    asignarPedidoAReparto();
+                    break;
+                case 2:
+                    entregarPedidoCompleto();
+                    break;
+                case 3:
+                    verEstadoReparto();
+                    break;
+                case 4:
+                    verEstadisticasRepartidores();
+                    break;
+                case 0:
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("\n✗ Opción inválida.\n");
+            }
+        }
+    }
+    
+    /**
+     * Asigna un pedido listo a un repartidor
+     */
+    private static void asignarPedidoAReparto() {
+        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║         ASIGNAR PEDIDO A REPARTIDOR                        ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        
+        // Solicitar ID del pedido
+        System.out.print("  Ingrese ID del pedido: ");
+        int idPedido = leerOpcion();
+        
+        // Buscar el pedido
+        Pedido pedido = gestorPedidos.buscarPedidoPorId(idPedido, datosIniciales.getPedidos());
+        
+        if (pedido == null) {
+            System.out.println("\n  ✗ Pedido no encontrado\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Verificar que esté listo
+        if (pedido.getEstado() != EstadoPedido.LISTO) {
+            System.out.println("\n  ✗ El pedido no está listo para reparto");
+            System.out.println("  Estado actual: " + pedido.getEstado() + "\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Verificar que sea de tipo DOMICILIO
+        if (pedido.getTipoPedido() != TipoPedido.DOMICILIO) {
+            System.out.println("\n  ✗ El pedido es para RETIRO, no requiere reparto\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Asignar automáticamente
+        gestorReparto.asignarPedidoAutomatico(idPedido, pedido);
+        
+        System.out.println();
+        presionarEnter();
+    }
+    
+    /**
+     * Procesa una entrega completa (asignación + simulación + completado)
+     */
+    private static void entregarPedidoCompleto() {
+        System.out.println("\n╔════════════════════════════════════════════════════════════╗");
+        System.out.println("║           ENTREGAR PEDIDO COMPLETO                         ║");
+        System.out.println("╚════════════════════════════════════════════════════════════╝\n");
+        
+        // Solicitar ID del pedido
+        System.out.print("  Ingrese ID del pedido: ");
+        int idPedido = leerOpcion();
+        
+        // Buscar el pedido
+        Pedido pedido = gestorPedidos.buscarPedidoPorId(idPedido, datosIniciales.getPedidos());
+        
+        if (pedido == null) {
+            System.out.println("\n  ✗ Pedido no encontrado\n");
+            presionarEnter();
+            return;
+        }
+        
+        // Verificar estado
+        if (pedido.getEstado() == EstadoPedido.LISTO) {
+            // Procesar entrega completa (asignar + simular + completar)
+            gestorReparto.procesarEntregaCompleta(idPedido, pedido);
+        } else if (pedido.getEstado() == EstadoPedido.EN_CAMINO) {
+            // Ya está en camino, solo completar
+            Repartidor repartidor = gestorReparto.buscarRepartidorConPedido(idPedido);
+            if (repartidor != null) {
+                gestorReparto.simularEntrega(idPedido, pedido, repartidor);
+                gestorReparto.completarEntrega(idPedido, pedido, repartidor);
+            } else {
+                System.out.println("\n  ✗ No se encontró el repartidor asignado\n");
+            }
+        } else {
+            System.out.println("\n  ✗ El pedido no está listo para entrega");
+            System.out.println("  Estado actual: " + pedido.getEstado() + "\n");
+        }
+        
+        presionarEnter();
+    }
+    
+    /**
+     * Muestra el estado del sistema de reparto
+     */
+    private static void verEstadoReparto() {
+        gestorReparto.mostrarEstado();
+        presionarEnter();
+    }
+    
+    /**
+     * Muestra estadísticas de repartidores
+     */
+    private static void verEstadisticasRepartidores() {
+        gestorReparto.mostrarEstadisticasRepartidores();
         presionarEnter();
     }
     
