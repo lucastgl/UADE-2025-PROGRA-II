@@ -220,4 +220,29 @@ utils → tda, implementations
 
 ---
 
-*Ver documentación completa en [README.md](README.md)*
+## 🎯 Estado del Proyecto
+
+### ✅ FASE 1: ESTRUCTURA Y MODELO DE DOMINIO
+**Estado:** ✅ COMPLETADO
+- ✅ Reestructuración de paquetes
+- ✅ Clases del modelo de dominio
+- ✅ Pruebas unitarias (TestModelo.java)
+- ✅ Documentación completa
+
+### ✅ FASE 2: MÓDULO DE GESTIÓN DE PEDIDOS
+**Estado:** ✅ COMPLETADO
+- ✅ GestorPedidos con validaciones
+- ✅ Cola de prioridad para clasificación
+- ✅ DatosIniciales (10 repartidores, 5 pedidos, menú)
+- ✅ Menú interactivo escalable
+- ✅ Estadísticas y consultas
+
+### 🔄 FASE 3: GESTIÓN DE COCINA Y REPARTO
+**Estado:** ⏳ PENDIENTE
+- [ ] GestorCocina
+- [ ] GestorReparto
+- [ ] Integración completa
+
+---
+
+*Ver documentación completa en [README.md](README.md) y [README-EJECUTAR.md](README-EJECUTAR.md)*

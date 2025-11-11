@@ -41,7 +41,7 @@ src/main/java/org/example/
 | Aspecto | Estado |
 |---------|--------|
 | **Clases del Modelo** | ✅ 6 clases + 3 enums |
-| **Compilación** | ✅ BUILD SUCCESS (52 archivos) |
+| **Compilación** | ✅ BUILD SUCCESS |
 | **Pruebas** | ✅ TestModelo funcionando |
 | **TDAs Utilizados** | ✅ LinkedListADT, PriorityQueueADT |
 | **Líneas de Código** | ~1,100+ líneas |
@@ -62,25 +62,109 @@ src/main/java/org/example/
 
 > Ver detalles completos en [MODELO.md](MODELO.md)
 
-#### Características del Modelo
-✅ **Encapsulamiento completo** - Atributos privados con getters/setters  
-✅ **Sistema de prioridades** - Pedidos VIP procesados primero  
-✅ **Validaciones robustas** - Control de rangos y estados  
-✅ **TDAs propios** - Sin usar estructuras nativas de Java  
-✅ **Documentación Javadoc** - Todos los métodos documentados  
+---
 
-### 🔲 Fase 2: Servicios de Gestión (PENDIENTE)
+### ✅ Fase 2: Módulo de Gestión de Pedidos (COMPLETADO)
 
-- `GestorPedidos` → Recepción y seguimiento de pedidos
+| Aspecto | Estado |
+|---------|--------|
+| **GestorPedidos** | ✅ Implementado (~390 líneas) |
+| **DatosIniciales** | ✅ Carga automática de datos |
+| **Menú Interactivo** | ✅ Sistema completo (~545 líneas) |
+| **Cola de Prioridad** | ✅ VIP procesados primero |
+| **Validaciones** | ✅ 10+ validaciones implementadas |
+| **Líneas de Código** | ~1,165 líneas |
+
+#### Servicios Implementados
+
+**`GestorPedidos`** - Gestor central del sistema
+- ✅ Registro de pedidos con validaciones exhaustivas
+- ✅ Clasificación automática por prioridad (VIP/NORMAL)
+- ✅ Gestión del menú de platos (15 items)
+- ✅ Verificación de existencia y disponibilidad
+- ✅ Estadísticas y reportes del sistema
+
+**`DatosIniciales`** - Carga automática de datos
+- ✅ 15 platos en el menú (pizzas, empanadas, hamburguesas, bebidas, postres)
+- ✅ 8 clientes (2 VIP, 6 regulares)
+- ✅ 10 repartidores (5 motos, 3 bicicletas, 2 autos)
+- ✅ 5 pedidos de ejemplo (2 VIP, 3 regulares)
+
+**`Main.java`** - Sistema de menú interactivo
+- ✅ Menú principal con 4 categorías
+- ✅ Gestión completa de pedidos
+- ✅ Consultas (clientes, repartidores, menú, pedidos)
+- ✅ Estadísticas (generales, platos populares, clientes VIP)
+- ✅ Interfaz visual con Unicode y emojis
+
+#### Funcionalidades del Sistema
+
+**1️⃣ Gestión de Pedidos**
+```
+✅ Registrar Nuevo Pedido
+   → Selección de cliente
+   → Tipo (Domicilio/Retiro)
+   → Agregar platos del menú
+   → Validación automática
+   → Clasificación por prioridad
+
+✅ Ver Cola de Pedidos
+✅ Procesar Siguiente Pedido (VIP primero)
+✅ Buscar Pedido por ID
+```
+
+**2️⃣ Consultas**
+```
+✅ Ver Menú de Platos
+✅ Ver Clientes
+✅ Ver Repartidores
+✅ Ver Todos los Pedidos
+```
+
+**3️⃣ Estadísticas**
+```
+✅ Estadísticas Generales
+✅ Platos Más Populares (Top 5)
+✅ Clientes VIP
+```
+
+#### Sistema de Cola de Prioridad
+
+El sistema utiliza `PriorityQueueADT` para clasificar pedidos automáticamente:
+
+```
+┌─────────────────────────────────────────┐
+│  [VIP]     Pedido #2 - María González   │ ← Procesa PRIMERO
+│  [VIP]     Pedido #1 - Juan Pérez       │ ← Procesa SEGUNDO
+│  [NORMAL]  Pedido #3 - Carlos López     │
+│  [NORMAL]  Pedido #4 - Ana Martínez     │
+│  [NORMAL]  Pedido #5 - Pedro Ramírez    │
+└─────────────────────────────────────────┘
+
+Regla: VIP (prioridad 1) > NORMAL (prioridad 2)
+```
+
+#### Validaciones Implementadas
+
+**Al Registrar Pedido:**
+1. ✅ Cliente debe existir en el sistema
+2. ✅ Pedido debe tener al menos un plato
+3. ✅ Todos los platos deben existir en el menú
+4. ✅ Todos los platos deben estar disponibles
+5. ✅ Referencias no pueden ser null
+
+**Al Procesar:**
+1. ✅ Verificar que hay pedidos en cola
+2. ✅ Obtener pedido de mayor prioridad
+3. ✅ Actualizar estado correctamente
+
+---
+
+### 🔲 Fase 3: Gestión de Cocina y Reparto (PENDIENTE)
+
 - `GestorCocina` → Administración de preparación
 - `GestorReparto` → Asignación y seguimiento de entregas
-
-### 🔲 Fase 3: Menú Interactivo (PENDIENTE)
-
-- Sistema de menú por consola
-- CRUD completo para cada entidad
-- Reportes y estadísticas
-- Flujo end-to-end de pedidos
+- Integración completa del flujo de pedidos
 
 ---
 
@@ -95,15 +179,44 @@ src/main/java/org/example/
 mvn clean compile
 ```
 
-### Ejecutar Main
+### Ejecutar el Sistema Interactivo (NUEVO)
 ```bash
 mvn exec:java -Dexec.mainClass="org.example.app.Main"
 ```
 
-### Ejecutar Pruebas del Modelo
+El sistema cargará automáticamente:
+- ✅ 15 platos en el menú
+- ✅ 8 clientes (2 VIP)
+- ✅ 10 repartidores
+- ✅ 5 pedidos de ejemplo
+
+### Ejecutar Pruebas del Modelo (Fase 1)
 ```bash
 mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 ```
+
+### Navegación del Sistema
+
+Una vez ejecutado, verás el menú principal:
+
+```
+╔════════════════════════════════════════════════════════════╗
+║                    MENÚ PRINCIPAL                          ║
+╠════════════════════════════════════════════════════════════╣
+║  1. 📋 Gestión de Pedidos                                  ║
+║  2. 🔍 Consultas                                           ║
+║  3. 📊 Estadísticas                                        ║
+║  4. ⚙️  Configuración                                      ║
+║  0. 🚪 Salir                                               ║
+╚════════════════════════════════════════════════════════════╝
+```
+
+**Controles:**
+- Números (1-4): Seleccionar opción
+- 0: Volver/Salir
+- Enter: Continuar
+
+> Ver guía completa en [README-EJECUTAR.md](README-EJECUTAR.md)
 
 ---
 
@@ -260,20 +373,36 @@ El proyecto utiliza **exclusivamente TDAs propios**, sin usar estructuras nativa
 ## 📊 Métricas del Proyecto
 
 ```
-┌─────────────────────────────┬──────────┐
-│ Métrica                     │ Valor    │
-├─────────────────────────────┼──────────┤
-│ Archivos Java               │ 52       │
-│ Interfaces TDA              │ 9        │
-│ Implementaciones TDA        │ 17       │
-│ Clases del Modelo           │ 6        │
-│ Enumeraciones              │ 3        │
-│ Clases de Nodos            │ 5        │
-│ Excepciones Personalizadas │ 5        │
-│ Líneas de Código           │ 3,500+   │
-│ Build Status               │ SUCCESS  │
-└─────────────────────────────┴──────────┘
+┌─────────────────────────────────┬──────────┐
+│ Métrica                         │ Valor    │
+├─────────────────────────────────┼──────────┤
+│ Archivos Java                   │ 54       │
+│ Interfaces TDA                  │ 9        │
+│ Implementaciones TDA            │ 17       │
+│ Clases del Modelo               │ 6        │
+│ Clases de Servicio              │ 2        │
+│ Enumeraciones                   │ 3        │
+│ Clases de Nodos                 │ 5        │
+│ Excepciones Personalizadas      │ 5        │
+│ Líneas de Código (Total)        │ 4,600+   │
+│ Líneas de Código (Fase 2)       │ ~1,165   │
+│ Métodos Implementados (Fase 2)  │ 53       │
+│ Validaciones (Fase 2)           │ 10+      │
+│ Build Status                    │ SUCCESS  │
+└─────────────────────────────────┴──────────┘
 ```
+
+### Desglose por Fase
+
+**Fase 1 - Modelado de Entidades:**
+- Líneas de código: ~1,100
+- Clases: 6 + 3 enums
+- TDAs utilizados: LinkedListADT, PriorityQueueADT
+
+**Fase 2 - Gestión de Pedidos:**
+- Líneas de código: ~1,165
+- Clases: 2 servicios + 1 app rediseñada
+- Funcionalidades: Registro, validación, cola de prioridad, menú interactivo, estadísticas
 
 ---
 
@@ -302,7 +431,8 @@ mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 
 | Archivo | Descripción |
 |---------|-------------|
-| [README.md](README.md) | Este archivo - Información general y comandos |
+| [README.md](README.md) | Este archivo - Información general, fases del proyecto y comandos |
+| [README-EJECUTAR.md](README-EJECUTAR.md) | Guía rápida para ejecutar el sistema |
 | [ESTRUCTURA.md](ESTRUCTURA.md) | Estructura detallada del proyecto |
 | [MODELO.md](MODELO.md) | Documentación del modelo de dominio |
 
@@ -361,15 +491,16 @@ mvn exec:java -Dexec.mainClass="org.example.app.TestModelo"
 ## 🚀 Próximos Pasos
 
 ### En Desarrollo
-- 🔲 Implementación de servicios de gestión
-- 🔲 Menú interactivo por consola
-- 🔲 Integración completa del sistema
+- 🔲 GestorCocina - Gestión de preparación de pedidos
+- 🔲 GestorReparto - Asignación de repartidores
+- 🔲 Integración completa del flujo de pedidos
 
 ### Futuras Mejoras
 - Persistencia de datos
 - Interfaz gráfica
 - Sistema de reportes avanzados
-- Módulo de estadísticas
+- Optimización de rutas de entrega
+- Módulo de inventario
 
 ---
 

@@ -1,6 +1,0 @@
-# Paquete service
-Este paquete contendrá la lógica de negocio del sistema:
-- GestorPedidos
-- GestorCocina
-- GestorReparto
-

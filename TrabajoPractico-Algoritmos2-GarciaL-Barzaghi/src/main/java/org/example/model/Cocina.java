@@ -2,7 +2,6 @@ package org.example.model;
 
 import org.example.implementations.DynamicPriorityQueueADT;
 import org.example.tda.PriorityQueueADT;
-import org.example.model.Enums.EstadoPedido;
 
 /**
  * Clase que representa la cocina del restaurante con su cola de pedidos en preparación
