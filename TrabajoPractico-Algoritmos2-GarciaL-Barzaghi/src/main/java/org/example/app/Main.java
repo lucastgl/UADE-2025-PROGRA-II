@@ -556,36 +556,70 @@ public class Main {
         System.out.println("║         ASIGNAR PEDIDO A REPARTIDOR                        ║");
         System.out.println("╚════════════════════════════════════════════════════════════╝\n");
         
-        // Solicitar ID del pedido
-        System.out.print("  Ingrese ID del pedido: ");
-        int idPedido = leerOpcion();
+        // Obtener todos los pedidos listos para reparto
+        Pedido[] todosPedidos = datosIniciales.getPedidos();
+        int cantidadPedidos = datosIniciales.getCantidadPedidos();
         
-        // Buscar el pedido
-        Pedido pedido = gestorPedidos.buscarPedidoPorId(idPedido, datosIniciales.getPedidos());
+        // Filtrar pedidos listos de tipo DOMICILIO
+        Pedido[] pedidosListos = new Pedido[cantidadPedidos];
+        int cantidadListos = 0;
         
-        if (pedido == null) {
-            System.out.println("\n  ✗ Pedido no encontrado\n");
+        for (int i = 0; i < cantidadPedidos; i++) {
+            if (todosPedidos[i] != null && 
+                todosPedidos[i].getEstado() == EstadoPedido.LISTO &&
+                todosPedidos[i].getTipoPedido() == TipoPedido.DOMICILIO) {
+                pedidosListos[cantidadListos] = todosPedidos[i];
+                cantidadListos++;
+            }
+        }
+        
+        // Verificar si hay pedidos listos
+        if (cantidadListos == 0) {
+            System.out.println("  ✗ No hay pedidos listos para asignar a reparto");
+            System.out.println("  → Los pedidos deben estar en estado LISTO y ser de tipo DOMICILIO\n");
             presionarEnter();
             return;
         }
         
-        // Verificar que esté listo
-        if (pedido.getEstado() != EstadoPedido.LISTO) {
-            System.out.println("\n  ✗ El pedido no está listo para reparto");
-            System.out.println("  Estado actual: " + pedido.getEstado() + "\n");
+        // Mostrar lista de pedidos disponibles
+        System.out.println("  PEDIDOS DISPONIBLES PARA ASIGNAR:");
+        System.out.println("  ──────────────────────────────────────────────────────────\n");
+        
+        for (int i = 0; i < cantidadListos; i++) {
+            Pedido p = pedidosListos[i];
+            System.out.println("  " + (i + 1) + ". Pedido #" + p.getId());
+            System.out.println("     Cliente: " + p.getCliente().getNombre());
+            System.out.println("     Dirección: " + p.getCliente().getDireccion());
+            System.out.println("     Prioridad: " + p.getPrioridad());
+            System.out.println("     Platos: " + p.getCantidadPlatos());
+            if (i < cantidadListos - 1) {
+                System.out.println();
+            }
+        }
+        
+        System.out.println("\n  ──────────────────────────────────────────────────────────");
+        System.out.print("  Seleccione el número del pedido (0 para cancelar): ");
+        
+        int seleccion = leerOpcion();
+        
+        if (seleccion == 0) {
+            System.out.println("\n  → Operación cancelada\n");
             presionarEnter();
             return;
         }
         
-        // Verificar que sea de tipo DOMICILIO
-        if (pedido.getTipoPedido() != TipoPedido.DOMICILIO) {
-            System.out.println("\n  ✗ El pedido es para RETIRO, no requiere reparto\n");
+        if (seleccion < 1 || seleccion > cantidadListos) {
+            System.out.println("\n  ✗ Selección inválida\n");
             presionarEnter();
             return;
         }
+        
+        // Obtener el pedido seleccionado
+        Pedido pedidoSeleccionado = pedidosListos[seleccion - 1];
+        int idPedido = pedidoSeleccionado.getId();
         
         // Asignar automáticamente
-        gestorReparto.asignarPedidoAutomatico(idPedido, pedido);
+        gestorReparto.asignarPedidoAutomatico(idPedido, pedidoSeleccionado);
         
         System.out.println();
         presionarEnter();
